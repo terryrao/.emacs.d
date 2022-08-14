@@ -16,4 +16,9 @@ eshell/
 elpa/
 auto-save-file/
 
+\#*
 
+.\#*
+
+~*
+recentf
