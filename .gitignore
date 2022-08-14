@@ -9,3 +9,11 @@
 
 # Undo-tree save-files
 *.~undo-tree
+
+
+session.*
+eshell/
+elpa/
+auto-save-file/
+
+
