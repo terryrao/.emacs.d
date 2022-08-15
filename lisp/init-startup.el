@@ -15,4 +15,13 @@
 (tool-bar-mode -1)
 (menu-bar-mode -1)
 
+;; tab replace by 4 spaces
+(setq-default indent-tabs-mode nil)
+(setq-default tab-width 4)
+
+(setq indent-tabs-mode nil)
+(setq tab-width 4)
+
+
 (provide 'init-startup)
+;;; init-startup.el ends here

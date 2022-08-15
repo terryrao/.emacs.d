@@ -20,7 +20,7 @@
 (require 'init-elpa)
 (require 'init-package)
 (require 'init-benchmark)
-
+(require 'init-lsp)
 (when (file-exists-p custom-file)
   (load-file custom-file))
 

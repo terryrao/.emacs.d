@@ -14,7 +14,8 @@
 (setq package-archives '(("melpa" . "https://melpa.org/packages/")
               ("melpa-stable" . "https://stable.mepla.org/packages/")
               ("org" . "https://orgmode.org/elpa/")
-              ("elpa" . "https://elpa.gnu.org/packages/")))
+              ("elpa" . "https://elpa.gnu.org/packages/")
+              ("nongnu" . "https://elpa.nongnu.org/nongnu/")))
 (require 'use-package)
 
 

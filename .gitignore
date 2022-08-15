@@ -22,3 +22,12 @@ auto-save-file/
 
 ~*
 recentf
+*.eld
+*.git.ignore.wwp
+
+.lsp-session-v1
+
+
+
+
+

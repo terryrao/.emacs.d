@@ -46,24 +46,77 @@
 
 ;; auto complete
 
-(use-package company
+;;(use-package company
+;;  :ensure t
+;;  :config
+ ;; (setq company-dabbrev-code-everywhere t
+;;	company-dabbrev-code-modes t
+;;	company-dabbrev-code-other-buffers 'all
+;;	company-dabbrev-downcase nil
+;;	company-dabbrev-ignore-case t
+;;	company-dabbrev-other-buffers 'all
+;;	company-require-math nil
+;;	company-minimum-prefix-length 2
+;;	company-show-numbers t
+;;	company-tooltip-limit 20
+;;	company-idle-delay 0
+;;	company-echo-delay 0
+;;	company-tooltip-offset-display 'scrollbar
+    ;;company-backends '((company-files company-yasnippet company-keywords company-capf)(company-abbrev company-dabbrev))
+;;	company-begin-commands '(self-insert-command))
+ ;;(push '(company-semantic :with company-yasnippet) company-backends)
+;;  :hook ((after-init . global-company-mode)))
+
+(use-package go-mode
+  ;; :load-path "~/.emacs.d/vendor/go-mode"
+  :mode ("\\.go\\'" . go-mode)
+  :ensure
+  ((goimports . "go get -u golang.org/x/tools/cmd/goimports")
+   (godef . "go get -u github.com/rogpeppe/godef"))
+  :init
+  (setq gofmt-command "goimports"
+        indent-tabs-mode t)
   :config
-  (setq company-dabbrev-code-everywhere t
-	company-dabbrev-code-modes t
-	company-dabbrev-code-other-buffers 'all
-	company-dabbrev-downcase nil
-	company-dabbrev-ignore-case t
-	company-dabbrev-other-buffers 'all
-	company-require-math nil
-	company-minimum-prefix-length 2
-	company-show-numbers t
-	company-tooltip-limit 20
-	company-idle-delay 0
-	company-echo-delay 0
-	company-tooltip-offset-display 'scrollbar
-	company-begin-commands '(self-insert-command))
-  (push '(company-semantic :with company-yasnippet) company-backends)
-  :hook ((after-init . global-company-mode)))
+  (add-hook 'before-save-hook 'gofmt-before-save)
+  :bind (:map go-mode-map
+              ("\C-c \C-c" . compile)
+              ("\C-c \C-g" . go-goto-imports)
+              ("\C-c \C-k" . godoc)
+              ("M-j" . godef-jump)))
+
+
+(use-package company
+  :ensure t
+  :config
+  (global-company-mode t)
+  (setq company-idle-delay 0)
+  (setq company-minimum-prefix-length 3)
+  (setq company-backends
+        '((company-files
+           company-yasnippet
+           company-keywords
+           company-capf
+           )
+          (company-abbrev company-dabbrev))))
+
+(add-hook 'emacs-lisp-mode-hook (lambda ()
+                                  (add-to-list  (make-local-variable 'company-backends)
+                                                '(company-elisp))))
+
+
+;;
+
+(use-package dumb-jump
+  :bind (("M-g o" . dumb-jump-go-other-window)
+         ("M-g j" . dumb-jump-go)
+         ("M-g x" . dumb-jump-go-prefer-external)
+         ("M-g z" . dumb-jump-go-prefer-external-other-window))
+  :config
+  ;; (setq dumb-jump-selector 'ivy) ;; (setq dumb-jump-selector 'helm)
+:init
+(dumb-jump-mode)
+  :ensure
+)
 
 ;; 语法检查
 (use-package flycheck
@@ -106,5 +159,58 @@
 (use-package ace-window
   :bind (("M-o" . 'ace-window)))
 
+;; popwin 窗口管理
+
+(use-package popwin
+  :config
+  (push '(direx:direx-mode :position left :width 25 :dedicated t)
+      popwin:special-display-config)
+  (global-set-key (kbd "C-x C-j") 'direx:jump-to-directory-other-window))
+(popwin-mode 1)
+
+
+(use-package projectile
+  :ensure t
+  :init
+  (projectile-mode +1)
+  :bind (:map projectile-mode-map
+              ("s-p" . projectile-command-map)
+              ("C-c p" . projectile-command-map)))
+
+
+(with-eval-after-load "go-mode"
+  (with-eval-after-load "project"
+    (defun project-find-go-module (dir)
+      (when-let ((root (locate-dominating-file dir "go.mod")))
+        (cons 'go-module root)))
+    (cl-defmethod project-root ((project (head go-module)))
+      (cdr project))
+    (add-hook 'project-find-functions 'project-find-go-module)))
+
+(use-package dired-sidebar
+  :bind (("C-x C-n" . dired-sidebar-toggle-sidebar))
+  :ensure t
+  :commands (dired-sidebar-toggle-sidebar)
+  :init
+  (add-hook 'dired-sidebar-mode-hook
+            (lambda ()
+              (unless (file-remote-p default-directory)
+                (auto-revert-mode))))
+  :config
+  (push 'toggle-window-split dired-sidebar-toggle-hidden-commands)
+  (push 'rotate-windows dired-sidebar-toggle-hidden-commands)
+
+  (setq dired-sidebar-subtree-line-prefix "__")
+  (setq dired-sidebar-theme 'vscode)
+  (setq dired-sidebar-use-term-integration t)
+  (setq dired-sidebar-use-custom-font t))
+
+
+
+(use-package evil
+  :config
+  (setq evil-shift-width 0)
+  )
+(evil-mode 1)
 
 (provide 'init-package)
