@@ -13,12 +13,14 @@
 
 
 
+
+
 ;; load config
+(require 'init-elpa)
+(require 'init-package)
 (require 'init-startup)
 (require 'init-consts)
 (require 'init-ui)
-(require 'init-elpa)
-(require 'init-package)
 (require 'init-benchmark)
 (require 'init-lsp)
 (when (file-exists-p custom-file)

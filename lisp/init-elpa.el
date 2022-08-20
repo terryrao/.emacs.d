@@ -16,13 +16,14 @@
               ("org" . "https://orgmode.org/elpa/")
               ("elpa" . "https://elpa.gnu.org/packages/")
               ("nongnu" . "https://elpa.nongnu.org/nongnu/")))
-(require 'use-package)
-
-
 
 ;; initial package manager 
-(unless (bound-and-true-p package--initialized)
-  (package-initialize))
+;(unless (bound-and-true-p package--initialized)
+;  (package-initialize))
+
+;(package-initialize)
+(unless (package-installed-p 'use-package)
+  (package-install 'use-package))
 
 (unless package-archive-contents
   (package-refresh-contents))
@@ -31,5 +32,7 @@
 (unless (package-installed-p 'use-package)
   (package-refesh-contents)
   (package-install 'use-package))
+(require 'use-package)
+
 
 (provide 'init-elpa)
