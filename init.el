@@ -1,4 +1,5 @@
 ;;; init.el --- The main entry for emacs -*- lexical-binding: t -*-
+;;; from https://github.com/condy0919/.emacs.d
 ;;; Commentary:
 ;;; Code:
 
@@ -15,10 +16,18 @@
 (setq read-process-output-max (* 4 1024 1024))
 
 (require 'package)
-(setq package-archives
+ (setq package-archives
       '(("melpa"  . "https://melpa.org/packages/")
         ("gnu"    . "https://elpa.gnu.org/packages/")
         ("nongnu" . "https://elpa.nongnu.org/nongnu/")))
+
+;; refresh package contents on start
+(when (not package-archive-contents)
+    (package-refresh-contents))
+
+;;(setq package-archives '(("gnu"    . "https://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
+;;                        ("nongnu" . "https://mirrors.tuna.tsinghua.edu.cn/elpa/nongnu/")
+;;                       ("melpa"  . "https://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")))
 
 ;; Bootstrap `use-package'
 (unless (package-installed-p 'use-package)

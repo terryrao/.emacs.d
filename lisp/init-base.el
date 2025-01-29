@@ -534,6 +534,18 @@ Else, call `comment-or-uncomment-region' on the current line."
   :when (eq system-type 'darwin)
   :hook (after-init . exec-path-from-shell-initialize))
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; 我们只希望在特定的模式中显示行号，因此需要调整
+;;; 重新定义 display-line-numbers--turn-on 函数即可
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(use-package emacs
+             :ensure t
+             :config 
+             (setq display-line-numbers-type 'relative)
+             (global-display-line-numbers-mode t)
+             )
+
 (provide 'init-base)
 
 ;;; init-base.el ends here
