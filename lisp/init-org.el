@@ -315,13 +315,33 @@
   :hook (after-init . org-roam-mode)
   :custom
   (org-roam-directory  "~/doc/mywork/notes")
+  (setq org-roam-dailies-directory "daily/")
+  (org-roam-completion-everywhere t)
+  (org-roam-dailies-capture-templates
+    '(("d" "default" entry "* %<%I:%M %p>: %?"
+       :if-new (file+head "%<%Y-%m-%d>.org" "#+title: %<%Y-%m-%d>\n"))))
   :bind (("C-c n l" . org-roam-buffer-toggle)
          ("C-c n f" . org-roam-node-find)
-         ("C-c n i" . org-roam-node-insert))
+         ("C-c n i" . org-roam-node-insert)
+        :map org-mode-map
+          ("C-M-i" . completion-at-point)
+         :map org-roam-dailies-map
+          ("Y" . org-roam-dailies-capture-yesterday)
+          ("T" . org-roam-dailies-capture-tomorrow))
+  :bind-keymap
+    ("C-c n d" . org-roam-dailies-map)
   :config
+  (require 'org-roam-dailies)
   (org-roam-db-autosync-mode)
   (setq find-file-visit-truename t)
-  (org-roam-setup))
+  (setq org-roam-mode-sections '((org-roam-backlinks-section :unique t)
+          org-roam-reflinks-section))
+  (add-to-list 'display-buffer-alist
+            '("\\*org-roam\\*"
+              (display-buffer-in-direction)
+              (direction . right)
+              (window-width . -1.33)
+              (window-height . fit-window-to-buffer))))
 
 
 
@@ -336,6 +356,7 @@
           org-roam-ui-follow t
           org-roam-ui-update-on-save t
           org-roam-ui-open-on-start t))
+
 
 
 (provide 'init-org)
